@@ -5,6 +5,7 @@ const port = 3003; // declaring port in a variable so that we can use anywhere o
 const middleware = require('./middleware')
 const path = require('path');
 const bodyParser = require('body-parser');
+const mongoose = require('./database'); 
 
 const server = app.listen(port, () => console.log("Server listening on port " + port)); // create server instance
 

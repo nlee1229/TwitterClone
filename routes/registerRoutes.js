@@ -17,7 +17,7 @@ router.post("/", (req, res, next) => {
     var lastName = req.body.lastName.trim();
     var username = req.body.username.trim();
     var email = req.body.email.trim();
-    var password = req.body.password();
+    var password = req.body.password;
 
     var payload = req.body; // contain all values user previously entered. Will fill in values they last used to save time for them
 
