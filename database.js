@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true); 
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false); // associated with find one and update. Prevents a warning in terminal.Calls a function in MongoDB that is no longer supported. Now it is supported with this line
+// mongoose.set('useUnifiedTopology', true); 
 
 class Database {
 
