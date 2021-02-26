@@ -1,15 +1,15 @@
 :root {
-    --blue: #1DA1F2;
-    --blueLight: #ACD1F4;
+    --blue: #1FA2F1;
+    --blueLight: #9BD1F9;
     --buttonHoverBg: #d4edff;
     --lightGrey: rgb(230, 236, 240);
     --spacing: 15px;
+    --greyText: rgb(101, 119, 134);
 }
-/* for the outline of the post box and icons, etc. !important is so that anything else we want to have border will not be affected by this styling */
+
 * {
     outline: none !important;
 }
-    
 
 a {
     color: inherit;
@@ -38,10 +38,10 @@ nav a {
     font-size: 30px;
     width: 55px;
     height: 55px;
-    display:  flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    color: #212529
+    color: #212529;
 }
 
 nav a.blue {
@@ -55,8 +55,9 @@ nav a:hover {
 }
 
 .mainSectionContainer {
-    padding: 0px;
+    padding:  0;
     border-left: 1px solid var(--lightGrey);
+    border-right: 1px solid var(--lightGrey);
     display: flex;
     flex-direction: column;
 }
@@ -65,7 +66,7 @@ nav a:hover {
     height: 53px;
     padding: 0 var(--spacing);
     display: flex;
-    align-items:center;
+    align-items: center;
     border-bottom: 1px solid var(--lightGrey);
     flex-shrink: 0;
 }
@@ -78,7 +79,7 @@ nav a:hover {
     display: flex;
     padding: var(--spacing);
     border-bottom: 10px solid rgb(230, 236, 240);
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
 .userImageContainer {
@@ -86,7 +87,7 @@ nav a:hover {
     height: 50px;
 }
 
-.userImageContainer img{
+.userImageContainer img {
     width: 100%;
     border-radius: 50%;
     background-color: white;
@@ -109,9 +110,35 @@ nav a:hover {
     color: white;
     border: none;
     border-radius: 40px;
-    padding: 7px 15px
+    padding: 7px 15px;
 }
 
 #submitPostButton:disabled {
     background-color: var(--blueLight);
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing);
+    cursor: pointer;
+    border-bottom: 1px solid var(--lightGrey);
+    flex-shrink: 0;
+}
+
+.mainContentContainer {
+    flex: 1;
+    display: flex;
+}
+
+.postContentContainer {
+    padding-left: var(--spacing);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.username,
+.date {
+    color: var(--greyText)
 }
