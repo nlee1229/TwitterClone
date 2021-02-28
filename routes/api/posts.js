@@ -11,8 +11,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 router.get("/", (req, res, next) => {
     Post.find()
     .populate("postedBy")
+    .populate("retweetData")
     .sort({ "createdAt": -1 }) // makes sure newest posts add on top of feed list
-    .then(results => res.status(200).send(results)) // send result back to user
+    .then(async results => {
+        results = await User.populate(results, {path: "retweetData.postedBy"});
+        res.status(200).send(results);
+    }) // send result back to user
     .catch(error => {
         console.log(error);
         res.sendStatus(400);
@@ -72,25 +76,37 @@ router.put("/:id/like", async (req, res, next) => {
 })
 
 router.post("/:id/retweet", async (req, res, next) => {
-    
-    return res.status(200).send("yee haw")
-
     var postId = req.params.id;
     var userId = req.session.user._id;
 
-    var isLiked = req.session.user.likes && req.session.user.likes.includes(postId);
+    // try and delete retweet
+    var deletedPost = await Post.findOneAndDelete({ postedBy: userId, retweetData: postId })
+    .catch(error => {
+        console.log(error);
+        res.sendStatus(400);
+    })
 
-    var option = isLiked ? "$pull" : "$addToSet";
+    var option = deletedPost != null ? "$pull" : "$addToSet";
+
+    var repost = deletedPost;
+
+    if (repost == null) {
+        repost = await Post.create({ postedBy: userId, retweetData: postId })
+        .catch(error => {
+            console.log(error);
+            res.sendStatus(400);
+        })
+    }
 
     // Insert user like
-    req.session.user = await User.findByIdAndUpdate(userId, { [option]: { likes: postId } }, { new: true })
+    req.session.user = await User.findByIdAndUpdate(userId, { [option]: { retweets: repost._id } }, { new: true })
     .catch(error => {
         console.log(error);
         res.sendStatus(400);
     })
 
     // Insert post like
-   var post = await Post.findByIdAndUpdate(postId, { [option]: { likes: userId } }, { new: true })
+   var post = await Post.findByIdAndUpdate(postId, { [option]: { retweetUsers: userId } }, { new: true })
     .catch(error => {
         console.log(error);
         res.sendStatus(400);
