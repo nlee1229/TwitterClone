@@ -19,7 +19,6 @@ router.get("/:id", async (req, res, next) => {
 
     var results = await getPosts({_id: postId});
     results = results[0];
-    console.log(results);
     res.status(200).send(results);
     
 })
@@ -34,6 +33,12 @@ router.post("/", async (req, res, next) => {
         content: req.body.content,
         postedBy: req.session.user
     }
+
+    if(req.body.replyTo) {
+        postData.replyTo = req.body.replyTo;
+    }
+
+
     // create a new post
     Post.create(postData)
     .then(async newPost => {
