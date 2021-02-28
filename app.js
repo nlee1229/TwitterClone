@@ -41,7 +41,8 @@ app.get("/", middleware.requireLogin, (req, res, next) => {
     
     var payload = { // term used to refer to the data we're sending to a function, page, etc.
         pageTitle: "Home",
-        userLoggedIn: req.session.user // will give us information about the user logged in
+        userLoggedIn: req.session.user, // will give us information about the user logged in
+        userLoggedInJs: JSON.stringify(req.session.user)
     }
 
     res.status(200).render("home", payload);
