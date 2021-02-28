@@ -1,8 +1,11 @@
 // where all the shared code gies and each of the pages can reuse this
-$("#postTextarea").keyup(event => {
+$("#postTextarea, #replyTextarea").keyup(event => {
     var textbox = $(event.target); // every key hit will be targeted
     var value = textbox.val().trim();
-    var submitButton = $("#submitPostButton");
+
+    var isModal = textbox.parents(".modal").length == 1;
+
+    var submitButton = isModal ? $("#submitReplyButton") : $("#submitPostButton");
 
     if(submitButton.length == 0) return alert("No submit button found")
 
@@ -30,6 +33,17 @@ $("#submitPostButton").click(() => {
         button.prop("disabled", true); 
     })
 })
+
+// Making request to get the post when modal opens (show post when popup opens)
+$("#replyModal").on("show.bs.modal", (event) => {
+    var button = $(event.relatedTarget);
+    var postId = getPostIdFromElement(button);
+    
+    $.get("/api/posts/" + postId, results => { // ajax request which will send data to the server without having to reload the page
+       console.log(results);
+    })
+})
+
 // like button click handler
 $(document).on("click", ".likeButton", (event) => {
     var button = $(event.target);
@@ -99,8 +113,6 @@ function createPostHtml(postData) {
     var retweetedBy = isRetweet ? postData.postedBy.username : null;
     postData = isRetweet ? postData.retweetData : postData;
 
-    console.log(isRetweet);
-
     var postedBy = postData.postedBy;
 
     if(postedBy._id === undefined) {
@@ -115,7 +127,7 @@ function createPostHtml(postData) {
 
     var retweetText = "";
     if(isRetweet) {
-        retweetText = `<span>Retweeted by <a href='/profile/${retweetedBy}'>@${retweetedBy}</a></span>`
+        retweetText = `<span><a href='/profile/${retweetedBy}'> <i class='fas fa-retweet'></i> @${retweetedBy} Retweeted</a></span>`
     }
 
     return `<div class='post' data-id='${postData._id}'>
@@ -137,7 +149,7 @@ function createPostHtml(postData) {
                         </div>
                         <div class='postFooter'>
                             <div class='postButtonContainer'>
-                                <button>
+                                <button data-toggle='modal' data-target='#replyModal'>
                                     <i class='far fa-comment'></i>
                                 </button>
                             </div>

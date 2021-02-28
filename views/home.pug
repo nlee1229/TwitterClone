@@ -1,11 +1,10 @@
 extends layouts/main-layout.pug
 
-block content 
-    //- calling the function from mixins.pug
-    +createPostForm(userLoggedIn) 
+block content    
+    +createPostForm(userLoggedIn)
     .postsContainer
 
-block scripts 
-    script(src="/js/home.js") 
+    +createReplyModal(userLoggedIn)
 
-    
+block scripts
+    script(src="/js/home.js")
